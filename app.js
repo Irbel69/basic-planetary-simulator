@@ -1,0 +1,150 @@
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+// resize the canvas to fill browser window dynamically
+/* window.addEventListener("resize", resizeCanvas, false);
+
+function resizeCanvas() {
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	
+}
+
+resizeCanvas(); */
+
+const HEIGHT = canvas.height;
+const WIDTH = canvas.width;
+const AU = 149.6e6 * 1000; // in m
+const G = 6.67428e-11;
+const SCALE = 200 / AU; // 1 AU = 100 pixels
+const TIMESTEP = 3600 * 24; // 1 day
+
+class Planet {
+	constructor(x, y, radius, color, mass, name) {
+        this.name = name
+		this.x = x;
+		this.y = y;
+		this.radius = radius;
+		this.color = color;
+		this.mass = mass;
+
+		this.orbit = [];
+		this.sun = false;
+		this.orbit_radius = 0;
+
+		this.x_vel = 0;
+		this.y_vel = 0;
+	}
+
+	draw() {
+		var x = this.x * SCALE + WIDTH / 2;
+		var y = this.y * SCALE + HEIGHT / 2;
+		if (this.orbit.length > 300)
+			this.orbit = this.orbit.slice(
+				this.orbit.length - 300,
+				this.orbit.length - 1
+			);
+		//this.orbit.forEach((point) => {
+		for (let i = 0; i < this.orbit.length; i++) {
+			var point = this.orbit[i];
+			if (i != 0) {
+				var prevPoint = this.orbit[i - 1];
+				ctx.beginPath();
+				ctx.strokeStyle = `${this.color.slice(0, this.color.length - 5)},${
+					i / this.orbit.length
+				})`;
+				ctx.moveTo(point[0] * SCALE + WIDTH / 2, point[1] * SCALE + HEIGHT / 2);
+				ctx.lineTo(
+					prevPoint[0] * SCALE + WIDTH / 2,
+					prevPoint[1] * SCALE + HEIGHT / 2
+				);
+				ctx.stroke();
+			}
+		}
+		//});
+
+		circle(x, y, this.radius, this.color);
+	}
+
+	attraction(other) {
+		var other_x = other.x;
+		var other_y = other.y;
+		var distance_x = other_x - this.x;
+		var distance_y = other_y - this.y;
+		var distance = (distance_x ** 2 + distance_y ** 2) ** 0.5;
+
+		if (other.sun) this.orbit_radius = distance;
+
+		var force = (G * this.mass * other.mass) / distance ** 2;
+		var angle = Math.atan2(distance_y, distance_x);
+		var force_x = Math.cos(angle) * force;
+		var force_y = Math.sin(angle) * force;
+
+		return [force_x, force_y];
+	}
+
+	updatePosition(planets) {
+		var total_fx = 0;
+		var total_fy = 0;
+
+		planets.forEach((planet) => {
+			if (this == planet) {
+				return;
+			}
+
+			var fx = this.attraction(planet)[0];
+			var fy = this.attraction(planet)[1];
+			total_fx += fx;
+			total_fy += fy;
+		});
+
+		this.x_vel += (total_fx / this.mass) * TIMESTEP;
+		this.y_vel += (total_fy / this.mass) * TIMESTEP;
+
+		this.x += this.x_vel * TIMESTEP;
+		this.y += this.y_vel * TIMESTEP;
+		this.orbit.push([this.x, this.y]);
+	}
+}
+
+var sun = new Planet(0, 0, 30, "rgba(255,255,0,255)", 1.98892e30, "Sun");
+sun.sun = true;
+
+var earth = new Planet(-1 * AU, 0, 16, "rgba(0, 153, 255,255)", 5.9742e24, "Earth");
+earth.y_vel = 29.783 * 1000;
+
+var mars = new Planet(-1.524 * AU, 0, 12, "rgba(255, 0, 0,255)", 6.39e23, "Mars");
+mars.y_vel = 24.077 * 1000;
+
+var mercury = new Planet(0.387 * AU, 0, 8, "rgba(102, 102, 153,255)", 0.33e24, "Mercury");
+mercury.y_vel = -47.4 * 1000;
+
+var venus = new Planet(0.723 * AU, 0, 14, "rgba(255, 255, 255,255)", 4.8685e24, "Venus");
+venus.y_vel = -35.02 * 1000;
+
+var planets = [sun, earth, mars, mercury, venus];
+
+async function main() {
+	var i = 0;
+	while (true) {
+		ctx.clearRect(0, 0, WIDTH, HEIGHT);
+		planets.forEach((planet) => {
+			planet.updatePosition(planets);
+			planet.draw();
+		});
+		await sleep(10);
+		i++;
+	}
+}
+
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function circle(x, y, r, c) {
+	ctx.beginPath();
+	ctx.fillStyle = c;
+	ctx.arc(x, y, r, 0, 2 * Math.PI);
+	ctx.fill();
+}
