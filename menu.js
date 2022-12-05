@@ -20,6 +20,8 @@ document.querySelector("#button-menu").addEventListener("click", () => {
 });
 var selectionfocusvalue = 0;
 function apply(key) {
+  
+  document.activeElement.blur();
   const globalMasses = {
     Sun: 1.98892e30,
     Earth: 5.9742e24,
@@ -130,7 +132,7 @@ planets.forEach((planet, key) => {
       <div class="accordion-body">
       <div class="inputgroup"><input type="number" min="0" step="${
         globalMasses[planet.name] / 100
-      }" class="input planet-${key}" value="${
+      }" class="input planet-${key}" id="mass-input-${key}" value="${
     globalMasses[planet.name]
   }"></input><select onfocus="selectionfocus(value)" onchange="selection(${key})" class="input2 planet-${key}">
         <option value='kg' style="text-align:center;">kg</option>
@@ -141,7 +143,7 @@ planets.forEach((planet, key) => {
       <div class="inputgroup"><input class="input inputv-planet-${key}" type="number" step="1" value="${
     (planet.x_vel ** 2 + planet.y_vel ** 2) ** 0.5 / 1000
   }"></input><p class="input2">km/s</p></div>
-      <div className="aplybuttondiv"><button class="apply-button" onclick="apply(${key})")>🪐 Apply!</button></div>
+      <div className="aplybuttondiv"><button class="apply-button" id="apply-button-${key}" onclick="apply(${key})")>🪐 Apply!</button></div>
       </div>
     </div>
   </div>
