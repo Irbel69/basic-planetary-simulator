@@ -26,7 +26,7 @@ canvas {
 
 #button-menu {
 	position: absolute;
-	left: -30px;
+	right: 0;
 	top: 50%;
 	padding: 10px;
 	border-radius: 3px 0px 0px 3px;
@@ -36,15 +36,18 @@ canvas {
 	font-family: "Poppins", sans-serif;
 	background-color: rgb(133, 131, 131);
 	z-index: 0;
+	transition: all 0.5s ease-in-out;
 }
-
+.showbutton{
+	right: 33vw!important;
+}
 #menu {
 	display: flex;
 	padding: 10px;
 	width: 33vw;
 	height: 100%;
 	position: absolute;
-	right: -35vw;
+	right: -33vw;
 	top: 0;
 	background: rgb(120, 118, 118);
 	transition: all 0.5s ease-in-out;

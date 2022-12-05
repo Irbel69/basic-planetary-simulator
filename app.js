@@ -18,7 +18,22 @@ const WIDTH = canvas.width;
 const AU = 149.6e6 * 1000; // in m
 const G = 6.67428e-11;
 const SCALE = 200 / AU; // 1 AU = 100 pixels
-const TIMESTEP = 3600 * 24; // 1 day
+
+var TIMESTEP = 3600 * 24; // 1 day
+
+const globalMasses = {
+	Sun: 1.98892e30,
+	Earth: 5.9742e24,
+	Mars: 6.39e23,
+	Mercury: 0.33e24,
+	Venus: 4.8685e24,
+};
+  
+
+function changeSpeed(v){
+	document.querySelector("#range-value").innerHTML = v;
+	TIMESTEP = v;
+}
 
 class Planet {
 	constructor(x, y, radius, color, mass, name) {
@@ -40,9 +55,11 @@ class Planet {
 	draw() {
 		var x = this.x * SCALE + WIDTH / 2;
 		var y = this.y * SCALE + HEIGHT / 2;
-		if (this.orbit.length > 300)
+		const num = 300
+		//console.log(num);
+		if (this.orbit.length > num)
 			this.orbit = this.orbit.slice(
-				this.orbit.length - 300,
+				this.orbit.length - num,
 				this.orbit.length - 1
 			);
 		//this.orbit.forEach((point) => {
@@ -108,22 +125,23 @@ class Planet {
 	}
 }
 
-var sun = new Planet(0, 0, 30, "rgba(255,255,0,255)", 1.98892e30, "Sun");
+var sun = new Planet(0, 0, 30, "rgba(255,255,0,255)", globalMasses.Sun, "Sun");
 sun.sun = true;
 
-var earth = new Planet(-1 * AU, 0, 16, "rgba(0, 153, 255,255)", 5.9742e24, "Earth");
+var earth = new Planet(-1 * AU, 0, 16, "rgba(0, 153, 255,255)", globalMasses.Earth, "Earth");
 earth.y_vel = 29.783 * 1000;
 
-var mars = new Planet(-1.524 * AU, 0, 12, "rgba(255, 0, 0,255)", 6.39e23, "Mars");
+var mars = new Planet(-1.524 * AU, 0, 12, "rgba(255, 0, 0,255)", globalMasses.Mars, "Mars");
 mars.y_vel = 24.077 * 1000;
 
-var mercury = new Planet(0.387 * AU, 0, 8, "rgba(102, 102, 153,255)", 0.33e24, "Mercury");
+var mercury = new Planet(0.387 * AU, 0, 8, "rgba(102, 102, 153,255)", globalMasses.Mercury, "Mercury");
 mercury.y_vel = -47.4 * 1000;
 
-var venus = new Planet(0.723 * AU, 0, 14, "rgba(255, 255, 255,255)", 4.8685e24, "Venus");
+var venus = new Planet(0.723 * AU, 0, 14, "rgba(255, 255, 255,255)", globalMasses.Venus, "Venus");
 venus.y_vel = -35.02 * 1000;
 
-var planets = [sun, earth, mars, mercury, venus];
+
+var planets = [sun, mercury, venus, earth, mars];
 
 async function main() {
 	var i = 0;
@@ -147,4 +165,12 @@ function circle(x, y, r, c) {
 	ctx.fillStyle = c;
 	ctx.arc(x, y, r, 0, 2 * Math.PI);
 	ctx.fill();
+}
+
+
+function changePlanetSpeed(key, newVel){
+	newVel*=1000;
+	console.log(newVel, key)
+	planets[key].x_vel=Math.cos(Math.atan2(planets[key].y_vel,planets[key].x_vel))*newVel;
+    planets[key].y_vel=Math.sin(Math.atan2(planets[key].y_vel,planets[key].x_vel))*newVel;
 }

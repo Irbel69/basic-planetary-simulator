@@ -9,18 +9,25 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="styles.css" />
         <link href="panelStyles.css" rel="stylesheet">
+
+
     </head>
 	<body onload="main();">
 		<canvas id="myCanvas">
         </canvas>
-        
-        <div id="menu" class="show">
-			<div id="button-menu">&lt</div>
+        <div id="button-menu">&lt</div>
+        <div id="menu" class="">
+			
             <div class="planet-list">
-				<div class="accordion accordion-flush" id="accordionFlushExample">
-
+				<div class="accordion accordion-flush" id="accordionFlushExample"></div>
+				<div class="speed-selector">
+					<p>Select the running speed!</p>
+					<div class="speed-container">
+						<div class="play-pause-button paused"></div>
+						<input type="range" min="5000" max="345600" value="86400" onchange="changeSpeed(this.value)" class="speed-selector-range">
+						<p>1 frame = <span id="range-value">86400</span> seconds</p>
+					</div>
 				</div>
-
             </div>
         </div>
 		<div id="stars"></div>
