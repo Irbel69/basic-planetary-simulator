@@ -118,7 +118,10 @@ class Planet {
 
 		this.x_vel += (total_fx / this.mass) * TIMESTEP;
 		this.y_vel += (total_fy / this.mass) * TIMESTEP;
-		document.querySelector(`.inputv-planet-${planets.indexOf(this)}`).value = ((this.x_vel**2+this.y_vel**2)**0.5).toFixed(2)
+
+		var input = document.querySelector(`.inputv-planet-${planets.indexOf(this)}`);
+		if (input !== document.activeElement)
+			input.value = (((this.x_vel**2+this.y_vel**2)**0.5)/1000).toFixed(5)
 
 		this.x += this.x_vel * TIMESTEP;
 		this.y += this.y_vel * TIMESTEP;
