@@ -139,7 +139,7 @@ planets.forEach((planet, key) => {
       ${planet.name}
       </button>
     </h2>
-    <div id="flush-collapse${key}" class="accordion-collapse collapse show" aria-labelledby="flush-heading${key}" data-bs-parent="#accordionFlushExample">
+    <div id="flush-collapse${key}" class="accordion-collapse collapse" aria-labelledby="flush-heading${key}" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
       <div class="inputgroup"><input type="number" min="0" step="${
         globalMasses[planet.name] / 100
