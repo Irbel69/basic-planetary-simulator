@@ -15,11 +15,13 @@
     display: flex;
     width: 100%;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .input {
+    max-width: 90%;
     color: #090a0f;
-    flex: 1;
+    flex: .8;
     border: 1px solid black;
     margin: .5rem;
     padding: .5rem;
@@ -28,6 +30,8 @@
 }
 
 .input2 {
+    max-width: 90%;
+    flex: .2;
     margin: .5rem;
     padding: .5rem;
     border-radius: 3px;
@@ -35,13 +39,35 @@
     text-align: center;
 }
 
-.aplybuttondiv {
+.applybuttondiv {
+    margin-top: 1rem;
+    margin-right: 1rem;
+    width: 100%;
     display: flex;
     justify-content: end;
     flex-direction: row;
     align-items: end;
 }
 
+.addVelocityDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+.addVelocityDiv button{
+    width: 1.6rem;
+    height: 1.6rem;
+    margin-bottom: .2rem;
+    border: 1px solid #a4a4a4;
+    border-radius: .2rem;
+    font-size: 1.4rem;
+/* check if it's centered... */
+    text-align: center;
+    line-height: 1.6rem;
+    
+}
 
 .apply-button {
     background-color: rgb(22, 115, 255);

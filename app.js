@@ -51,12 +51,10 @@ class Planet {
 		this.x_vel = 0;
 		this.y_vel = 0;
 	}
-
 	draw() {
 		var x = this.x * SCALE + WIDTH / 2;
 		var y = this.y * SCALE + HEIGHT / 2;
 		const num = parseInt((300*3600 * 24)/TIMESTEP)
-		console.log(num);
 		//console.log(num);
 		if (this.orbit.length > num)
 			this.orbit = this.orbit.slice(
