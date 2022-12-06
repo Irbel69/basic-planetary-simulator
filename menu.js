@@ -18,6 +18,19 @@ document.querySelector("#button-menu").addEventListener("click", () => {
     document.querySelector("#button-menu").classList.remove("showbutton");
   }
 });
+
+function addVelocity(key){
+  changePlanetSpeed(
+    key,
+    parseFloat(document.querySelector(`.inputv-planet-${key}`).value) + 2
+  );
+}
+function substractVelocity(key){
+  changePlanetSpeed(
+    key,
+    parseFloat(document.querySelector(`.inputv-planet-${key}`).value) - 2
+  );
+}
 var selectionfocusvalue = 0;
 function apply(key) {
   
@@ -40,10 +53,11 @@ function apply(key) {
     globalMasses[planets[key].name];
   console.log(values[planets[key].name]);
   //change velocities
+  /* 
   changePlanetSpeed(
     key,
     parseFloat(document.querySelector(`.inputv-planet-${key}`).value)
-  );
+  ); */
 }
 
 function selection(key) {
@@ -98,7 +112,6 @@ function selection(key) {
   select.blur();
 }
 function selectionfocus(value) {
-  console.log("EPPPPPPPPPP");
   selectionfocusvalue = value;
 }
 const values = {
@@ -142,7 +155,7 @@ planets.forEach((planet, key) => {
       </select></div>
       <div class="inputgroup"><input class="input inputv-planet-${key}" disabled type="number" step="1" value="${
     (planet.x_vel ** 2 + planet.y_vel ** 2) ** 0.5 / 1000
-  }"></input><div class="addVelocityDiv"><button>+</button><button>-</button></div><p class="input2">km/s</p></div>
+  }"></input><div class="addVelocityDiv"><button onclick="addVelocity(${key})">+</button><button onclick="substractVelocity(${key})">-</button></div><p class="input2">km/s</p></div>
       <div class="applybuttondiv"><button class="apply-button" id="apply-button-${key}" onclick="apply(${key})")>🪐 Apply!</button></div>
       </div>
     </div>
