@@ -41,43 +41,40 @@ function changeSpeed(v) {
   document.querySelector("#range-value").innerHTML = v;
   TIMESTEP = v;
 }
+function zoom(event, zoomin = false) {
+  
+  var wheel = 1
+  if (event === null) {
+    wheel = zoomin ? 1 : -1;
+  } else {
+	event.preventDefault();
+    wheel = event.deltaY < 0 ? 1 : -1;
+    if (scale < 0.05 && wheel <= 0) return;
+  }
 
-canvas.onwheel = function (event) {
-  event.preventDefault();
+ /*  const mousex = event.clientX - canvas.offsetLeft;
+  const mousey = event.clientY - canvas.offsetTop; */
 
-  // Get mouse offset.
-  const mousex = event.clientX - canvas.offsetLeft;
-  const mousey = event.clientY - canvas.offsetTop;
-  // Normalize mouse wheel movement to +1 or -1 to avoid unusual jumps.
-  const wheel = event.deltaY < 0 ? 1 : -1;
-  if (scale < 0.05 && wheel <= 0) return;
-  // Compute zoom factor.
   const zoom = Math.exp(wheel * zoomIntensity);
 
-  // Translate so the visible origin is at the context's origin.
   //ctx.translate(originx, originy);
-  ctx.translate(WIDTH/2, HEIGHT/2);
+  ctx.translate(WIDTH / 2, HEIGHT / 2);
 
-  // Compute the new visible origin. Originally the mouse is at a
-  // distance mouse/scale from the corner, we want the point under
-  // the mouse to remain in the same place after the zoom, but this
-  // is at mouse/new_scale away from the corner. Therefore we need to
-  // shift the origin (coordinates of the corner) to account for this.
-  originx -= mousex / (scale * zoom) - mousex / scale;
-  originy -= mousey / (scale * zoom) - mousey / scale;
 
-  // Scale it (centered around the origin due to the trasnslate above).
+  /* originx -= mousex / (scale * zoom) - mousex / scale;
+  originy -= mousey / (scale * zoom) - mousey / scale; */
+
   ctx.scale(zoom, zoom);
-  // Offset the visible origin to it's proper position.
-  //ctx.translate(-originx, -originy);
-  ctx.translate(-WIDTH/2, -HEIGHT/2);
 
-  // Update scale and others.
+  //ctx.translate(-originx, -originy);
+  ctx.translate(-WIDTH / 2, -HEIGHT / 2);
+
 
   scale *= zoom;
   visibleWidth = WIDTH / scale;
   visibleHeight = HEIGHT / scale;
-};
+}
+canvas.onwheel = (e) => zoom(e);
 
 class Planet {
   constructor(x, y, radius, color, mass, name) {

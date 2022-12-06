@@ -153,7 +153,9 @@ planets.forEach((planet, key) => {
       </select></div>
       <div class="inputgroup"><input class="input inputv-planet-${key} inputv" type="number" step="1" value="${
     ((planet.x_vel ** 2 + planet.y_vel ** 2) ** 0.5 / 1000)
-  }"></input><div class="addVelocityDiv"><button onclick="addVelocity(${key})">+</button><button onclick="substractVelocity(${key})">-</button></div><p class="input2">km/s</p></div>
+  }"></input><div class="addVelocityDiv"><button onmousedown="start(event)"
+  onmouseup="end()" onclick="addVelocity(${key})">+</button><button onmousedown="start(event)"
+  onmouseup="end()" onclick="substractVelocity(${key})">-</button></div><p class="input2">km/s</p></div>
       <div class="applybuttondiv"><button class="apply-button" id="apply-button-${key}" onclick="apply(${key})")>🪐 Apply!</button></div>
       </div>
     </div>
