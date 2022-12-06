@@ -23,6 +23,9 @@ canvas {
 	display: block;
 	z-index: 1;
 }
+canvas:active:hover{
+	cursor: grab;
+}
 
 #button-menu {
 	position: absolute;
@@ -267,7 +270,7 @@ canvas {
 		1356px 577px #fff, 714px 778px #fff, 1379px 346px #fff, 965px 1810px #fff,
 		770px 1769px #fff, 1893px 506px #fff, 1079px 1984px #fff, 730px 1115px #fff,
 		773px 755px #fff, 455px 1675px #fff, 950px 89px #fff, 1028px 1184px #fff;
-	animation: animStar 50s linear infinite;
+	animation: animStar 300s linear infinite;
 }
 #stars:after {
 	content: " ";
@@ -511,7 +514,7 @@ canvas {
 		743px 1093px #fff, 1064px 1508px #fff, 559px 1802px #fff, 1122px 1723px #fff,
 		268px 1766px #fff, 1114px 1973px #fff, 1502px 1726px #fff, 833px 1372px #fff,
 		1702px 82px #fff;
-	animation: animStar 100s linear infinite;
+	animation: animStar 300s linear infinite;
 }
 #stars2:after {
 	content: " ";
@@ -604,7 +607,7 @@ canvas {
 		845px 1845px #fff, 1915px 1602px #fff, 1489px 1887px #fff, 1798px 398px #fff,
 		2000px 418px #fff, 1892px 324px #fff, 1880px 661px #fff, 1800px 1427px #fff,
 		1388px 1784px #fff, 1641px 688px #fff;
-	animation: animStar 150s linear infinite;
+	animation: animStar 350s linear infinite;
 }
 #stars3:after {
 	content: " ";
@@ -642,10 +645,13 @@ canvas {
 }
 
 @keyframes animStar {
-	from {
+	0% {
 		transform: translateY(-1000px);
 	}
-	to {
+	50% {
 		transform: translateY(-2000px);
+	}
+	100% {
+		transform: translateY(-1000px);
 	}
 }

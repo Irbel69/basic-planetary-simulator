@@ -6,3 +6,4 @@
   function end() {
     clearInterval(counter)
   }
+

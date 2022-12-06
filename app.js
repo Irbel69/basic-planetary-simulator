@@ -1,5 +1,6 @@
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
+ctx.setTransform(1, 0, 0, 1, 0, 0);
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 // resize the canvas to fill browser window dynamically
@@ -16,6 +17,7 @@ resizeCanvas(); */
 let HEIGHT = canvas.height;
 let WIDTH = canvas.width;
 
+//visual variables
 let scale = 1;
 let originx = 0;
 let originy = 0;
@@ -41,40 +43,6 @@ function changeSpeed(v) {
   document.querySelector("#range-value").innerHTML = v;
   TIMESTEP = v;
 }
-function zoom(event, zoomin = false) {
-  
-  var wheel = 1
-  if (event === null) {
-    wheel = zoomin ? 1 : -1;
-  } else {
-	event.preventDefault();
-    wheel = event.deltaY < 0 ? 1 : -1;
-    if (scale < 0.05 && wheel <= 0) return;
-  }
-
- /*  const mousex = event.clientX - canvas.offsetLeft;
-  const mousey = event.clientY - canvas.offsetTop; */
-
-  const zoom = Math.exp(wheel * zoomIntensity);
-
-  //ctx.translate(originx, originy);
-  ctx.translate(WIDTH / 2, HEIGHT / 2);
-
-
-  /* originx -= mousex / (scale * zoom) - mousex / scale;
-  originy -= mousey / (scale * zoom) - mousey / scale; */
-
-  ctx.scale(zoom, zoom);
-
-  //ctx.translate(-originx, -originy);
-  ctx.translate(-WIDTH / 2, -HEIGHT / 2);
-
-
-  scale *= zoom;
-  visibleWidth = WIDTH / scale;
-  visibleHeight = HEIGHT / scale;
-}
-canvas.onwheel = (e) => zoom(e);
 
 class Planet {
   constructor(x, y, radius, color, mass, name) {
@@ -228,25 +196,106 @@ venus.y_vel = -35.02 * 1000;
 
 var planets = [sun, mercury, venus, earth, mars];
 
-async function main() {
-  if (scale <= 1)
+function render() {
+  if (scale < 1)
     ctx.clearRect(
-      -WIDTH / scale,
-      -HEIGHT / scale,
-      (2 * WIDTH) / scale,
-      (2 * HEIGHT) / scale
+      (-WIDTH - posX) / scale,
+      (-HEIGHT - posY) / scale,
+      2 * WIDTH ** (1 / scale),
+      2 * HEIGHT ** (1 / scale)
     );
   else ctx.clearRect(-WIDTH, -HEIGHT, 2 * WIDTH, 2 * HEIGHT);
   planets.forEach((planet) => {
     planet.updatePosition(planets);
     planet.draw();
   });
+}
+let dragging = false;
+let generalMouseX = 0;
+let generalMouseY = 0;
+let posX = 0;
+let posY = 0;
 
-  await sleep(10);
+canvas.addEventListener("mousedown", (event) => {
+  generalMouseY = event.clientY - canvas.offsetTop;
+  generalMouseX = event.clientX - canvas.offsetLeft;
+  dragging = true;
+  //dragging = setInterval(applyView, 10,event);
+});
+canvas.addEventListener("mouseup", () => {
+  dragging = false;
+  //clearInterval(dragging)
+});
+canvas.onmousemove = (e) => {
+  applyView(e);
+  /* sleep(10) */
+};
+canvas.onmouseleave = () => {
+  dragging = false;
+};
+function applyView(event) {
+  if (!dragging) return;
+  const mousey = event.clientY - generalMouseY;
+  const mousex = event.clientX - generalMouseX;
+
+  //ctx.translate(originx, originy);
+
+  /*  originx -= mousex / (scale * zoom) - mousex / scale;
+  originy -= mousey / (scale * zoom) - mousey / scale;  */
+
+  //console.log((mousex - WIDTH / 2) * -1, (mousey - HEIGHT / 2) * -1);
+  posX += mousex;
+  posY += mousey;
+  //console.log(posX, posY);
+  ctx.translate(mousex / scale, mousey / scale);
+  generalMouseY = mousey + event.clientY;
+  generalMouseX = mousex + event.clientX;
+
+  //ctx.translate(x,y);
+}
+
+function zoom(event, zoomin = false) {
+  var wheel = 1;
+  if (event === null) {
+    wheel = zoomin ? 1 : -1;
+  } else {
+    event.preventDefault();
+    wheel = event.deltaY < 0 ? 1 : -1;
+    if ((scale < 0.05 && wheel <= 0)|| (scale > 1.5 && wheel>=1) )return;
+  }
+
+  /*  const mousex = event.clientX - canvas.offsetLeft;
+  const mousey = event.clientY - canvas.offsetTop; */
+
+  const zoom = Math.exp(wheel * zoomIntensity);
+
+  originx = (WIDTH/2) - posX;
+  originy = (HEIGHT/2) - posY;
+
+  //ctx.translate(originx, originy);
+  ctx.translate(originx, originy);
+  //ctx.translate(WIDTH / 2, HEIGHT / 2);
+
+  /* originx -= mousex / (scale * zoom) - mousex / scale;
+  originy -= mousey / (scale * zoom) - mousey / scale; */
+
+  ctx.scale(zoom, zoom);
+
+  //ctx.translate(-originx, -originy);
+  ctx.translate(-originx, -originy);
+  //ctx.translate(-WIDTH / 2, -HEIGHT / 2);
+
+  scale *= zoom;
+  visibleWidth = WIDTH / scale;
+  visibleHeight = HEIGHT / scale;
+}
+canvas.onwheel = (e) => zoom(e);
+
+function main() {
+  render();
 
   window.requestAnimationFrame(main);
 }
-main();
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
