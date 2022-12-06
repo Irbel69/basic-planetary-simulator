@@ -19,21 +19,24 @@ document.querySelector("#button-menu").addEventListener("click", () => {
   }
 });
 
-function addVelocity(key){
+function addVelocity(key) {
+  document.querySelector(`.inputv-planet-${key}`).value =
+  parseFloat(document.querySelector(`.inputv-planet-${key}`).value) + 2;
   changePlanetSpeed(
     key,
-    parseFloat(document.querySelector(`.inputv-planet-${key}`).value) + 2
+    parseFloat(document.querySelector(`.inputv-planet-${key}`).value)
   );
 }
-function substractVelocity(key){
+function substractVelocity(key) {
+  document.querySelector(`.inputv-planet-${key}`).value =
+  parseFloat(document.querySelector(`.inputv-planet-${key}`).value) - 2;
   changePlanetSpeed(
     key,
-    parseFloat(document.querySelector(`.inputv-planet-${key}`).value) - 2
+    parseFloat(document.querySelector(`.inputv-planet-${key}`).value)
   );
 }
 var selectionfocusvalue = 0;
 function apply(key) {
-  
   document.activeElement.blur();
   const globalMasses = {
     Sun: 1.98892e30,
@@ -53,11 +56,11 @@ function apply(key) {
     globalMasses[planets[key].name];
   console.log(values[planets[key].name]);
   //change velocities
-  /* 
+
   changePlanetSpeed(
     key,
     parseFloat(document.querySelector(`.inputv-planet-${key}`).value)
-  ); */
+  );
 }
 
 function selection(key) {
@@ -66,16 +69,11 @@ function selection(key) {
   console.log(select.value);
   console.log(selectionfocusvalue);
 
-
   console.log(selectionfocusvalue);
   if (selectionfocusvalue !== "kg" && select.value === planets[key].name) {
-    values[planets[key].name] = inp.value * globalMasses[selectionfocusvalue]
-    inp.value = values[planets[key].name] / globalMasses[planets[key].name]
-
-  } 
-  
-  
-  else if (select.value === "kg") {
+    values[planets[key].name] = inp.value * globalMasses[selectionfocusvalue];
+    inp.value = values[planets[key].name] / globalMasses[planets[key].name];
+  } else if (select.value === "kg") {
     if (selectionfocusvalue === "kg" && select.value !== planets[key].name)
       values[planets[key].name] = inp.value * globalMasses[planets[key].name];
     else {
@@ -107,7 +105,7 @@ function selection(key) {
   }
 
   console.log({ selectionfocusvalue, select: select.value, inp: inp.value });
-  
+
   console.log(values);
   select.blur();
 }
@@ -153,7 +151,7 @@ planets.forEach((planet, key) => {
           return `<option value='${val.name}' style="text-align:center;">${val.name}</option>`;
         })}
       </select></div>
-      <div class="inputgroup"><input class="input inputv-planet-${key}" disabled type="number" step="1" value="${
+      <div class="inputgroup"><input class="input inputv-planet-${key} inputv" type="number" step="1" value="${
     (planet.x_vel ** 2 + planet.y_vel ** 2) ** 0.5 / 1000
   }"></input><div class="addVelocityDiv"><button onclick="addVelocity(${key})">+</button><button onclick="substractVelocity(${key})">-</button></div><p class="input2">km/s</p></div>
       <div class="applybuttondiv"><button class="apply-button" id="apply-button-${key}" onclick="apply(${key})")>🪐 Apply!</button></div>
