@@ -123,13 +123,6 @@ var planetList = document.querySelector('.planet-list');
 planets.forEach((planet, key) => {
 	var mass = planet.mass;
 	var velocity = (planet.x_vel ** 2 + planet.y_vel ** 2) ** 0.5;
-	const globalMasses = {
-		Sun: 1.98892e30,
-		Earth: 5.9742e24,
-		Mars: 6.39e23,
-		Mercury: 0.33e24,
-		Venus: 4.8685e24,
-	};
 
 	document.querySelector('.planet-list .accordion').innerHTML += `
  
