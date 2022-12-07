@@ -7,12 +7,14 @@ canvas.height = window.innerHeight;
 /* window.addEventListener("resize", resizeCanvas, false);
 
 function resizeCanvas() {
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 	
 }
 
 resizeCanvas(); */
+let colider = false;
+let lightSpeedLimit = false;
 
 let HEIGHT = canvas.height;
 let WIDTH = canvas.width;
@@ -28,6 +30,7 @@ const zoomIntensity = 0.2;
 const AU = 149.6e6 * 1000; // in m
 const G = 6.67428e-11;
 const SCALE = 200 / AU; // 1 AU = 100 pixels
+const LIGHTSPEED = 299792458;//ms
 
 var TIMESTEP = 3600 * 24; // 1 day
 
@@ -49,13 +52,18 @@ class Planet {
     this.name = name;
     this.x = x;
     this.y = y;
-    this.radius = radius;
     this.color = color;
     this.mass = mass;
+    try {
+      this.visualRadius = Math.abs(18 * (Math.log10(this.mass) - 23) ** (0.3) - 5); //function that calculates visual visualRadius
+    } catch (error) {
+      this.visualRadius = 10
+    }
+    this.radius = radius;
 
     this.orbit = [];
     this.sun = false;
-    this.orbit_radius = 0;
+    this.orbit_visualRadius = 0;
 
     this.x_vel = 0;
     this.y_vel = 0;
@@ -77,9 +85,8 @@ class Planet {
       if (i != 0) {
         var prevPoint = this.orbit[i - 1];
         ctx.beginPath();
-        ctx.strokeStyle = `${this.color.slice(0, this.color.length - 5)},${
-          i / this.orbit.length
-        })`;
+        ctx.strokeStyle = `${this.color.slice(0, this.color.length - 5)},${i / this.orbit.length
+          })`;
         ctx.moveTo(point[0] * SCALE + WIDTH / 2, point[1] * SCALE + HEIGHT / 2);
         ctx.lineTo(
           prevPoint[0] * SCALE + WIDTH / 2,
@@ -90,7 +97,7 @@ class Planet {
     }
     //});
 
-    circle(x, y, this.radius, this.color);
+    circle(x, y, this.visualRadius, this.color);
   }
 
   attraction(other) {
@@ -100,7 +107,16 @@ class Planet {
     var distance_y = other_y - this.y;
     var distance = (distance_x ** 2 + distance_y ** 2) ** 0.5;
 
-    if (other.sun) this.orbit_radius = distance;
+    if (distance < (other.radius + this.radius) ** 1.15 && colider) { //checking if colides with another planet
+      console.log("colide");
+      if (this.mass > other.mass) {
+        this.mass += other.mass
+        planets.splice(planets.indexOf(other), 1);
+      }
+    }
+
+
+    if (other.sun) this.orbit_visualRadius = distance;
 
     var force = (G * this.mass * other.mass) / distance ** 2;
     var angle = Math.atan2(distance_y, distance_x);
@@ -125,19 +141,18 @@ class Planet {
       total_fy += fy;
     });
 
+
+    //if (!(((this.x_vel + total_fx / this.mass) ** 2 + (this.y_vel + (total_fy / this.mass)) ** 2) ** 0.5 > LIGHTSPEED && lightSpeedLimit)) { // check if speed is aboce light speed
     this.x_vel += (total_fx / this.mass) * TIMESTEP;
     this.y_vel += (total_fy / this.mass) * TIMESTEP;
+    //}
+
 
     //show value in textbox
     var input = document.querySelector(
       `.inputv-planet-${planets.indexOf(this)}`
     );
-    if (
-      input !== document.activeElement &&
-      document.activeElement !==
-        document.getElementById(
-          `apply-button-${planets.indexOf(this)}`
-        ) /*&& document.activeElement !== document.getElementById(`mass-input-${planets.indexOf(this)}`)*/
+    if (input !== document.activeElement && document.activeElement !== document.getElementById(`apply-button-${planets.indexOf(this)}`) /*&& document.activeElement !== document.getElementById(`mass-input-${planets.indexOf(this)}`)*/
     ) {
       input.value = ((this.x_vel ** 2 + this.y_vel ** 2) ** 0.5 / 1000).toFixed(
         5
@@ -151,13 +166,13 @@ class Planet {
   }
 }
 
-var sun = new Planet(0, 0, 30, "rgba(255,255,0,255)", globalMasses.Sun, "Sun");
+var sun = new Planet(0, 0, 696340000, "rgba(255,255,0,255)", globalMasses.Sun, "Sun");
 sun.sun = true;
 
 var earth = new Planet(
   -1 * AU,
   0,
-  16,
+  6371000,
   "rgba(0, 153, 255,255)",
   globalMasses.Earth,
   "Earth"
@@ -167,7 +182,7 @@ earth.y_vel = 29.783 * 1000;
 var mars = new Planet(
   -1.524 * AU,
   0,
-  12,
+  3389500,
   "rgba(255, 0, 0,255)",
   globalMasses.Mars,
   "Mars"
@@ -177,7 +192,7 @@ mars.y_vel = 24.077 * 1000;
 var mercury = new Planet(
   0.387 * AU,
   0,
-  8,
+  2439700,
   "rgba(102, 102, 153,255)",
   globalMasses.Mercury,
   "Mercury"
@@ -187,7 +202,7 @@ mercury.y_vel = -47.4 * 1000;
 var venus = new Planet(
   0.723 * AU,
   0,
-  14,
+  6051800,
   "rgba(255, 255, 255,255)",
   globalMasses.Venus,
   "Venus"
@@ -261,7 +276,7 @@ function zoom(event, zoomin = false) {
   } else {
     event.preventDefault();
     wheel = event.deltaY < 0 ? 1 : -1;
-    if ((scale < 0.05 && wheel <= 0)|| (scale > 1.5 && wheel>=1) )return;
+    if ((scale < 0.05 && wheel <= 0) || (scale > 1.5 && wheel >= 1)) return;
   }
 
   /*  const mousex = event.clientX - canvas.offsetLeft;
@@ -269,8 +284,8 @@ function zoom(event, zoomin = false) {
 
   const zoom = Math.exp(wheel * zoomIntensity);
 
-  originx = (WIDTH/2) - posX;
-  originy = (HEIGHT/2) - posY;
+  originx = (WIDTH / 2) - posX;
+  originy = (HEIGHT / 2) - posY;
 
   //ctx.translate(originx, originy);
   ctx.translate(originx, originy);
@@ -309,9 +324,11 @@ function circle(x, y, r, c) {
 
 function changePlanetSpeed(key, newVel) {
   newVel *= 1000;
-  console.log(newVel, key);
-  planets[key].x_vel =
-    Math.cos(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
-  planets[key].y_vel =
-    Math.sin(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
+  if (newVel < LIGHTSPEED) {
+    console.log(newVel, key);
+    planets[key].x_vel =
+      Math.cos(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
+    planets[key].y_vel =
+      Math.sin(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
+  }
 }
