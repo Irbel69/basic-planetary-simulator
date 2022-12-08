@@ -173,7 +173,3 @@ document.getElementById('colider-input').addEventListener('change', function () 
 	else colider = false;
 });
 
-document.getElementById('speedLightLimit-input').addEventListener('change', function () {
-	if (this.checked) lightSpeedLimit = true;
-	else lightSpeedLimit = false;
-});

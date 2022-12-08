@@ -14,8 +14,6 @@ function resizeCanvas() {
 
 resizeCanvas(); */
 let colider = false;
-let lightSpeedLimit = false;
-
 let HEIGHT = canvas.height;
 let WIDTH = canvas.width;
 
@@ -30,7 +28,6 @@ const zoomIntensity = 0.2;
 const AU = 149.6e6 * 1000; // in m
 const G = 6.67428e-11;
 const SCALE = 200 / AU; // 1 AU = 100 pixels
-const LIGHTSPEED = 299792458; //ms
 
 var TIMESTEP = 3600 * 24; // 1 day
 
@@ -146,10 +143,10 @@ class Planet {
       total_fy += fy;
     });
 
-    //if (!(((this.x_vel + total_fx / this.mass) ** 2 + (this.y_vel + (total_fy / this.mass)) ** 2) ** 0.5 > LIGHTSPEED && lightSpeedLimit)) { // check if speed is aboce light speed
+
     this.x_vel += (total_fx / this.mass) * TIMESTEP;
     this.y_vel += (total_fy / this.mass) * TIMESTEP;
-    //}
+
 
     //show value in textbox
     var input = document.querySelector(
@@ -343,11 +340,10 @@ function circle(x, y, r, c) {
 
 function changePlanetSpeed(key, newVel) {
   newVel *= 1000;
-  if (newVel < LIGHTSPEED) {
-    console.log(newVel, key);
-    planets[key].x_vel =
-      Math.cos(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
-    planets[key].y_vel =
-      Math.sin(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
-  }
+  console.log(newVel, key);
+  planets[key].x_vel =
+    Math.cos(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
+  planets[key].y_vel =
+    Math.sin(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
+
 }
