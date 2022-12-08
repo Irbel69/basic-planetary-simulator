@@ -87,9 +87,8 @@ class Planet {
       if (i != 0) {
         var prevPoint = this.orbit[i - 1];
         ctx.beginPath();
-        ctx.strokeStyle = `${this.color.slice(0, this.color.length - 5)},${
-          i / this.orbit.length
-        })`;
+        ctx.strokeStyle = `${this.color.slice(0, this.color.length - 5)},${i / this.orbit.length
+          })`;
         ctx.moveTo(point[0] * SCALE + WIDTH / 2, point[1] * SCALE + HEIGHT / 2);
         ctx.lineTo(
           prevPoint[0] * SCALE + WIDTH / 2,
@@ -113,9 +112,12 @@ class Planet {
     if (distance < (other.radius + this.radius) ** 1.15 && colider) {
       //checking if colides with another planet
       console.log("colide");
+      console.log(this.name, this.mass, "  ", other.name, other.mass)
       if (this.mass > other.mass) {
         this.mass += other.mass;
+        //console.log(planets)
         planets.splice(planets.indexOf(other), 1);
+        //console.log(planets)
       }
     }
 
@@ -137,9 +139,9 @@ class Planet {
       if (this == planet) {
         return;
       }
-
-      var fx = this.attraction(planet)[0];
-      var fy = this.attraction(planet)[1];
+      var attractionArr = this.attraction(planet);
+      var fx = attractionArr[0];
+      var fy = attractionArr[1];
       total_fx += fx;
       total_fy += fy;
     });
@@ -156,9 +158,9 @@ class Planet {
     if (
       input !== document.activeElement &&
       document.activeElement !==
-        document.getElementById(
-          `apply-button-${planets.indexOf(this)}`
-        ) /*&& document.activeElement !== document.getElementById(`mass-input-${planets.indexOf(this)}`)*/
+      document.getElementById(
+        `apply-button-${planets.indexOf(this)}`
+      ) /*&& document.activeElement !== document.getElementById(`mass-input-${planets.indexOf(this)}`)*/
     ) {
       input.value = ((this.x_vel ** 2 + this.y_vel ** 2) ** 0.5 / 1000).toFixed(
         5
