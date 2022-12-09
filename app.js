@@ -37,6 +37,10 @@ const globalMasses = {
   Mars: 6.39e23,
   Mercury: 0.33e24,
   Venus: 4.8685e24,
+  Jupiter: 1.898e27,
+  Saturn: 5.683e26,
+  Uranus: 8.681e25,
+  Neptune: 1.024e26
 };
 
 function changeSpeed(v) {
@@ -97,6 +101,12 @@ class Planet {
     //});
 
     circle(x, y, this.visualRadius, this.color);
+    ctx.beginPath()
+    ctx.fillStyle = "white"
+    ctx.font = `${20}px Arial`
+    ctx.fillText(this.name, x + 13 + this.visualRadius, y + 7);
+    ctx.fillStyle = `${this.color.slice(0, this.color.length - 5)},.4)`
+    ctx.fillRect(x + 10 + this.visualRadius, y - 10, this.name.length * 14, 20)
   }
 
   attraction(other) {
@@ -221,7 +231,47 @@ var venus = new Planet(
 );
 venus.y_vel = -35.02 * 1000;
 
-var planets = [sun, mercury, venus, earth, mars];
+var jupiter = new Planet(
+  -5.2 * AU,
+  0,
+  69911000,
+  "rgba(255, 165, 0,255)",
+  globalMasses.Jupiter,
+  "Jupiter"
+);
+jupiter.y_vel = 13.05555 * 1000;
+
+var saturn = new Planet(
+  -9.538 * AU,
+  0,
+  58232000,
+  "rgba(255, 214, 0,255)",
+  globalMasses.Saturn,
+  "Saturn"
+);
+saturn.y_vel = 9.861111 * 1000;
+
+var uranus = new Planet(
+  -19.8 * AU,
+  0,
+  25362000,
+  "rgba(0, 224, 255,255)",
+  globalMasses.Uranus,
+  "Uranus"
+);
+uranus.y_vel = 6.81 * 1000;
+
+var neptune = new Planet(
+  -30 * AU,
+  0,
+  24622000,
+  "rgba(0, 133, 255,255)",
+  globalMasses.Neptune,
+  "Neptune"
+);
+neptune.y_vel = 5.4778 * 1000;
+
+var planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune];
 
 function render() {
   if (scale < 1)
@@ -232,6 +282,11 @@ function render() {
       2 * HEIGHT ** (1 / scale)
     );
   else ctx.clearRect(-WIDTH, -HEIGHT, 2 * WIDTH, 2 * HEIGHT);
+  /*  ctx.clearRect(-posX / scale, -posY / scale, visibleWidth + visibleWidth / scale, visibleHeight + visibleHeight / scale);
+   ctx.beginPath()
+   ctx.fillRect(-posX, -posY, 10, 10)
+   ctx.beginPath()
+   ctx.fillRect(posX + canvas.width, posY + canvas.height, 10, 10) */
   planets.forEach((planet) => {
     planet.updatePosition(planets);
     planet.draw();

@@ -38,13 +38,6 @@ function substractVelocity(key) {
 var selectionfocusvalue = 0;
 function apply(key) {
 	document.activeElement.blur();
-	const globalMasses = {
-		Sun: 1.98892e30,
-		Earth: 5.9742e24,
-		Mars: 6.39e23,
-		Mercury: 0.33e24,
-		Venus: 4.8685e24,
-	};
 
 	var inp = document.querySelector(`input.planet-${key}`);
 	var select = document.querySelector(`select.planet-${key}`);
@@ -118,6 +111,10 @@ const values = {
 	Mars: 6.39e23,
 	Mercury: 0.33e24,
 	Venus: 4.8685e24,
+	Jupiter: 1.898e27,
+	Saturn: 5.683e26,
+	Uranus: 8681e25,
+	Neptune: 1.024e26
 };
 var planetList = document.querySelector('.planet-list');
 planets.forEach((planet, key) => {
