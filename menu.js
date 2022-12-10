@@ -170,3 +170,17 @@ document.getElementById('colider-input').addEventListener('change', function () 
 	else colider = false;
 });
 
+document.getElementById('real-size-radius-input').addEventListener('change', function () {
+	if (this.checked)
+		planets.forEach(planet => {
+			planet.visualRadius = SCALE * planet.radius;
+		})
+	else
+		planets.forEach(planet => {
+			planet.visualRadius = Math.abs(
+				18 * (Math.log10(planet.mass) - 23) ** 0.3 - 5
+			); //function that calculates visual visualRadius
+		})
+
+});
+
