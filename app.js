@@ -49,12 +49,13 @@ function changeSpeed(v) {
 }
 
 class Planet {
-  constructor(x, y, radius, color, mass, name) {
+  constructor(x, y, radius, color, mass, name, orbitalPeriod) {
     this.name = name;
     this.x = x;
     this.y = y;
     this.color = color;
     this.mass = mass;
+    this.orbitalPeriod = orbitalPeriod; // in seconds
     try {
       this.visualRadius = Math.abs(
         18 * (Math.log10(this.mass) - 23) ** 0.3 - 5
@@ -69,7 +70,7 @@ class Planet {
     this.orbit_visualRadius = 0;
 
     this.x_vel = 0;
-    this.y_vel = 0;
+    this.y_vel = -((2*Math.PI)/orbitalPeriod) * x;
   }
 
   draw() {
@@ -187,7 +188,8 @@ var sun = new Planet(
   696340000,
   "rgba(255,255,0,255)",
   globalMasses.Sun,
-  "Sun"
+  "Sun",
+  1 // can not divide by 0
 );
 sun.sun = true;
 
@@ -197,9 +199,9 @@ var earth = new Planet(
   6371000,
   "rgba(0, 153, 255,255)",
   globalMasses.Earth,
-  "Earth"
+  "Earth",
+  365*24*3600
 );
-earth.y_vel = 29.783 * 1000;
 
 var mars = new Planet(
   -1.524 * AU,
@@ -207,9 +209,9 @@ var mars = new Planet(
   3389500,
   "rgba(255, 0, 0,255)",
   globalMasses.Mars,
-  "Mars"
+  "Mars",
+  687*24*3600
 );
-mars.y_vel = 24.077 * 1000;
 
 var mercury = new Planet(
   0.387 * AU,
@@ -217,9 +219,9 @@ var mercury = new Planet(
   2439700,
   "rgba(102, 102, 153,255)",
   globalMasses.Mercury,
-  "Mercury"
+  "Mercury",
+  88*24*3600
 );
-mercury.y_vel = -47.4 * 1000;
 
 var venus = new Planet(
   0.723 * AU,
@@ -227,9 +229,9 @@ var venus = new Planet(
   6051800,
   "rgba(255, 255, 255,255)",
   globalMasses.Venus,
-  "Venus"
+  "Venus",
+  225*24*3600
 );
-venus.y_vel = -35.02 * 1000;
 
 var jupiter = new Planet(
   -5.2 * AU,
@@ -237,9 +239,9 @@ var jupiter = new Planet(
   69911000,
   "rgba(255, 165, 0,255)",
   globalMasses.Jupiter,
-  "Jupiter"
+  "Jupiter",
+  12*365*24*3600
 );
-jupiter.y_vel = 13.05555 * 1000;
 
 var saturn = new Planet(
   -9.538 * AU,
@@ -247,9 +249,9 @@ var saturn = new Planet(
   58232000,
   "rgba(255, 214, 0,255)",
   globalMasses.Saturn,
-  "Saturn"
+  "Saturn",
+  29*365*24*3600
 );
-saturn.y_vel = 9.861111 * 1000;
 
 var uranus = new Planet(
   -19.8 * AU,
@@ -257,9 +259,9 @@ var uranus = new Planet(
   25362000,
   "rgba(0, 224, 255,255)",
   globalMasses.Uranus,
-  "Uranus"
+  "Uranus",
+  84*365*24*3600
 );
-uranus.y_vel = 6.81 * 1000;
 
 var neptune = new Planet(
   -30 * AU,
@@ -267,9 +269,9 @@ var neptune = new Planet(
   24622000,
   "rgba(0, 133, 255,255)",
   globalMasses.Neptune,
-  "Neptune"
+  "Neptune",
+  165*365*24*3600
 );
-neptune.y_vel = 5.4778 * 1000;
 
 var planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune];
 
