@@ -49,13 +49,15 @@ function changeSpeed(v) {
 }
 
 class Planet {
-  constructor(x, y, radius, color, mass, name, orbitalPeriod) {
+  constructor(x, y, radius, color, mass, name) {
     this.name = name;
     this.x = x;
     this.y = y;
     this.color = color;
     this.mass = mass;
-    this.orbitalPeriod = orbitalPeriod; // in seconds
+    this.orbitalPeriod = ((4*Math.PI**2*Math.abs(x)**3)/(G*1.968*10**30))**0.5; // in seconds
+    this.orbitalPeriod = this.orbitalPeriod==0?1:this.orbitalPeriod; // can not divide by 0
+    
     try {
       this.visualRadius = Math.abs(
         18 * (Math.log10(this.mass) - 23) ** 0.3 - 5
@@ -70,7 +72,7 @@ class Planet {
     this.orbit_visualRadius = 0;
 
     this.x_vel = 0;
-    this.y_vel = -((2*Math.PI)/orbitalPeriod) * x;
+    this.y_vel = -((2*Math.PI)/this.orbitalPeriod) * x;
   }
 
   draw() {
@@ -188,8 +190,7 @@ var sun = new Planet(
   696340000,
   "rgba(255,255,0,255)",
   globalMasses.Sun,
-  "Sun",
-  1 // can not divide by 0
+  "Sun"
 );
 sun.sun = true;
 
@@ -199,8 +200,7 @@ var earth = new Planet(
   6371000,
   "rgba(0, 153, 255,255)",
   globalMasses.Earth,
-  "Earth",
-  365*24*3600
+  "Earth"
 );
 
 var mars = new Planet(
@@ -209,8 +209,7 @@ var mars = new Planet(
   3389500,
   "rgba(255, 0, 0,255)",
   globalMasses.Mars,
-  "Mars",
-  687*24*3600
+  "Mars"
 );
 
 var mercury = new Planet(
@@ -219,8 +218,7 @@ var mercury = new Planet(
   2439700,
   "rgba(102, 102, 153,255)",
   globalMasses.Mercury,
-  "Mercury",
-  88*24*3600
+  "Mercury"
 );
 
 var venus = new Planet(
@@ -229,8 +227,7 @@ var venus = new Planet(
   6051800,
   "rgba(255, 255, 255,255)",
   globalMasses.Venus,
-  "Venus",
-  225*24*3600
+  "Venus"
 );
 
 var jupiter = new Planet(
@@ -239,8 +236,7 @@ var jupiter = new Planet(
   69911000,
   "rgba(255, 165, 0,255)",
   globalMasses.Jupiter,
-  "Jupiter",
-  12*365*24*3600
+  "Jupiter"
 );
 
 var saturn = new Planet(
@@ -249,8 +245,7 @@ var saturn = new Planet(
   58232000,
   "rgba(255, 214, 0,255)",
   globalMasses.Saturn,
-  "Saturn",
-  29*365*24*3600
+  "Saturn"
 );
 
 var uranus = new Planet(
@@ -259,8 +254,7 @@ var uranus = new Planet(
   25362000,
   "rgba(0, 224, 255,255)",
   globalMasses.Uranus,
-  "Uranus",
-  84*365*24*3600
+  "Uranus"
 );
 
 var neptune = new Planet(
@@ -269,8 +263,7 @@ var neptune = new Planet(
   24622000,
   "rgba(0, 133, 255,255)",
   globalMasses.Neptune,
-  "Neptune",
-  165*365*24*3600
+  "Neptune"
 );
 
 var planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune];
