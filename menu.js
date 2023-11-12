@@ -152,14 +152,16 @@ planets.forEach((planet, key) => {
 
 var btn = document.querySelector('.play-pause-button');
 
+var PAUSEDTIMESTEP = TIMESTEP;
+
 btn.addEventListener('click', function () {
 	btn.classList.toggle('paused');
 
 	console.log(btn.value);
 	if (btn.classList.contains('paused')) {
-		TIMESTEP = parseInt(document.querySelector('#range-value').innerHTML);
-		console.log('a');
+		TIMESTEP = PAUSEDTIMESTEP;
 	} else {
+		PAUSEDTIMESTEP = TIMESTEP;
 		TIMESTEP = 0;
 		console.log('b');
 	}

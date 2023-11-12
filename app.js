@@ -3,6 +3,8 @@ const ctx = canvas.getContext("2d");
 ctx.setTransform(1, 0, 0, 1, 0, 0);
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
+var FPS;
 // resize the canvas to fill browser window dynamically
 /* window.addEventListener("resize", resizeCanvas, false);
 
@@ -44,7 +46,7 @@ const globalMasses = {
 };
 
 function changeSpeed(v) {
-  document.querySelector("#range-value").innerHTML = v;
+  document.querySelector("#range-value").innerHTML = (v*FPS/3600/24).toFixed(2);
   TIMESTEP = v;
 }
 
@@ -374,9 +376,10 @@ canvas.onwheel = (e) => zoom(e);
 
 function main() {
   render();
-
+  FPS++;
   window.requestAnimationFrame(main);
 }
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -395,5 +398,4 @@ function changePlanetSpeed(key, newVel) {
     Math.cos(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
   planets[key].y_vel =
     Math.sin(Math.atan2(planets[key].y_vel, planets[key].x_vel)) * newVel;
-
 }
